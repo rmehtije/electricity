@@ -4,16 +4,22 @@ import Navigation from './Navigation/Navigation';
 import Body from './Body';
 import './app.scss';
 import Footer from './Footer';
-import { CHART } from './constants';
+import { CHART, PERIODS } from './constants';
 
 function App() {
   const [dataType, setDataType] = useState(CHART);
+  const [selectedPeriod, setSelectedPeriod] = useState(PERIODS[0].value);
 
   return (
     <Container>
       <Navigation />
-      <Body dataType={dataType} />
-      <Footer dataType={dataType} setDataType={setDataType} />
+      <Body dataType={dataType} selectedPeriod={selectedPeriod}/>
+      <Footer
+        dataType={dataType}
+        setDataType={setDataType}
+        selectedPeriod={selectedPeriod}
+        setSelectedPeriod={setSelectedPeriod}
+      />
     </Container>
   );
 }
