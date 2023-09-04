@@ -3,17 +3,26 @@ import Header from "./Header";
 import Chart from "./Chart";
 import DataTable from './DataTable';
 import ErrorModal from './ErrorModal';
-import { getElectricityPrice, getGasPrice } from '../services/apiService';
+import { getElectricityPrice, getGasPrice, getCurrentGasPrice } from '../services/apiService';
 import { CHART } from '../constants';
 import './body.scss';
 
-function Body({ dataType, selectedPeriod, activeEnergy, setActiveEnergy }) {
-    const [electricityPrice, setElectricityPrice] = useState(null);
-    const [gasPrice, setGasPrice] = useState(null);
+function Body({
+    dataType,
+    selectedPeriod,
+    activeEnergy,
+    setActiveEnergy,
+    electricityPrice,
+    setElectricityPrice,
+    gasPrice,
+    setGasPrice,
+    gasCurrentPrice,
+    setGasCurrentPrice,
+}) {
     const [errorMessage, setErrorMessage] = useState(null);
 
     useEffect(() => {
-        getElectricityPrice(selectedPeriod).then(data => {
+        getElectricityPrice({ selectedPeriod }).then(data => {
             console.log('ele', data);
             if (!data.success) {
                 throw data.messages[0];
@@ -22,7 +31,7 @@ function Body({ dataType, selectedPeriod, activeEnergy, setActiveEnergy }) {
         })
             .catch(setErrorMessage);
 
-        getGasPrice(selectedPeriod).then(data => {
+        getGasPrice({ selectedPeriod }).then(data => {
             console.log('gas', data);
             if (!data.success) {
                 throw data.messages[0];
@@ -31,7 +40,17 @@ function Body({ dataType, selectedPeriod, activeEnergy, setActiveEnergy }) {
         })
             .catch(setErrorMessage);
 
-    }, [selectedPeriod]);
+    }, [selectedPeriod, setGasPrice, setElectricityPrice]);
+
+    useEffect(() => {
+        getCurrentGasPrice().then(data => {
+            console.log('gas', data);
+            if (!data.success) {
+                throw data.messages[0];
+            }
+            setGasCurrentPrice(data.data[0].price);
+        }).catch(setErrorMessage);
+    }, [setGasCurrentPrice]);
 
     return (
         <>
@@ -39,6 +58,7 @@ function Body({ dataType, selectedPeriod, activeEnergy, setActiveEnergy }) {
                 activeEnergy={activeEnergy}
                 setActiveEnergy={setActiveEnergy}
                 electricityPrice={electricityPrice}
+                gasCurrentPrice={gasCurrentPrice}
             />
             {dataType === CHART ?
                 <Chart

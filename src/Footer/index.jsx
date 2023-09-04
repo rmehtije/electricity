@@ -10,7 +10,7 @@ function Footer(props) {
         <>
             <DataSwitcher {...props}/>
             <Periods setShowSideBar={setShowSideBar} {...props}/>
-            <SideBar show={showSideBar} handleClose={() => setShowSideBar(false)} />
+            <SideBar show={showSideBar} handleClose={() => setShowSideBar(false)} {...props}/>
         </>
     );
 }

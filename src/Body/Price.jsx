@@ -1,21 +1,21 @@
 import { useEffect, useState } from 'react';
-import { NOW_TIMESTAMP } from '../constants';
+import { NOW_TIMESTAMP, ELE } from '../constants';
 
-function Price({ electricityPrice }) {
+function Price({ electricityPrice, gasCurrentPrice, activeEnergy }) {
     const [currentPrice, setCurrentPrice] = useState(0);
 
     useEffect(() => {
         if (!electricityPrice) return;
 
-        const { price } = electricityPrice.ee.find(item => item.timestamp === NOW_TIMESTAMP);
+        const current = electricityPrice.ee.find(item => item.timestamp === NOW_TIMESTAMP);
 
-        setCurrentPrice(price);
+        setCurrentPrice(current?.price || 0);
 
     }, [electricityPrice]);
 
     return (
         <>
-            <h2>{currentPrice}</h2>
+            <h2>{activeEnergy === ELE ? currentPrice : parseFloat(gasCurrentPrice).toFixed(2)}</h2>
             <div>sents/kw</div>
         </>
     );
