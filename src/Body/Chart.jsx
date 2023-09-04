@@ -1,44 +1,63 @@
-import React from 'react';
-import { 
-    LineChart, 
-    Line, 
-    XAxis, 
-    YAxis, 
-    CartesianGrid, 
-    Tooltip, 
-    Legend, 
-    ResponsiveContainer, 
+import React, { useEffect, useState } from 'react';
+import {
+    LineChart,
+    Line,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    Legend,
+    ResponsiveContainer,
     ReferenceLine,
 } from 'recharts';
 import moment from 'moment';
+import { NOW_TIMESTAMP, ELE, GAS } from '../constants';
 
-function Chart({ electricityPrice }) {
+function Chart({ electricityPrice, activeEnergy, gasPrice }) {
+    const [chartData, setChartData] = useState([]);
 
-    const data = electricityPrice?.ee.map(
-        price => ({ ...price, hour: moment.unix(price.timestamp).format('HH') })
-    );
+    useEffect(() => {
+        if (!electricityPrice || !gasPrice) return;
 
-    const now = moment().format('HH');
-  
+        const energy = {
+            [ELE]: {
+                data: electricityPrice.ee,
+                format: 'HH',
+            },
+            [GAS]: {
+                data: gasPrice.common,
+                format: 'DD',
+            },
+        };
+
+        const data = energy[activeEnergy].data.map(data =>
+            ({
+                ...data,
+                interval: moment
+                    .unix(data.timestamp)
+                    .format(energy[activeEnergy].format)
+            })
+        );
+
+        setChartData(data);
+    }, [electricityPrice, gasPrice, activeEnergy]);
+
     return (
         <div className="chartContainer">
             <ResponsiveContainer height="100%" width="100%">
                 <LineChart
-                    data={data}
-                    margin={{
-                        top: 5,
-                        right: 30,
-                        left: 20,
-                        bottom: 5,
-                    }}
+                    data={chartData}
                 >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="hour" />
+                    <XAxis dataKey="interval" />
                     <YAxis />
                     <Tooltip />
                     <Legend />
                     <Line type="monotone" dataKey="price" stroke="#8884d8" activeDot={{ r: 8 }} />
-                    <ReferenceLine x={data?.findIndex(({hour}) => hour === now)} stroke={'red'} />
+                    <ReferenceLine
+                        x={chartData.findIndex(({ timestamp }) => timestamp === NOW_TIMESTAMP)}
+                        stroke={'red'}
+                    />
                 </LineChart>
             </ResponsiveContainer>
         </div>

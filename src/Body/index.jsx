@@ -4,11 +4,10 @@ import Chart from "./Chart";
 import DataTable from './DataTable';
 import ErrorModal from './ErrorModal';
 import { getElectricityPrice, getGasPrice } from '../services/apiService';
-import { ELE, CHART } from '../constants';
+import { CHART } from '../constants';
 import './body.scss';
 
-function Body({ dataType, selectedPeriod }) {
-    const [activeEnergy, setActiveEnergy] = useState(ELE);
+function Body({ dataType, selectedPeriod, activeEnergy, setActiveEnergy }) {
     const [electricityPrice, setElectricityPrice] = useState(null);
     const [gasPrice, setGasPrice] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
@@ -21,7 +20,7 @@ function Body({ dataType, selectedPeriod }) {
             }
             setElectricityPrice(data.data);
         })
-        .catch(setErrorMessage);
+            .catch(setErrorMessage);
 
         getGasPrice(selectedPeriod).then(data => {
             console.log('gas', data);
@@ -30,7 +29,7 @@ function Body({ dataType, selectedPeriod }) {
             }
             setGasPrice(data.data);
         })
-        .catch(setErrorMessage);
+            .catch(setErrorMessage);
 
     }, [selectedPeriod]);
 
@@ -39,6 +38,7 @@ function Body({ dataType, selectedPeriod }) {
             <Header
                 activeEnergy={activeEnergy}
                 setActiveEnergy={setActiveEnergy}
+                electricityPrice={electricityPrice}
             />
             {dataType === CHART ?
                 <Chart
@@ -49,8 +49,9 @@ function Body({ dataType, selectedPeriod }) {
                 : <DataTable
                     electricityPrice={electricityPrice}
                     gasPrice={gasPrice}
+                    activeEnergy={activeEnergy}
                 />}
-            <ErrorModal errorMessage={errorMessage} handleClose={() => setErrorMessage(null)}/>
+            <ErrorModal errorMessage={errorMessage} handleClose={() => setErrorMessage(null)} />
         </>
     );
 }

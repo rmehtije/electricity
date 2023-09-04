@@ -17,8 +17,8 @@ export async function getElectricityPrice(selectedPeriod) {
 }
 
 export async function getGasPrice(selectedPeriod) {
-    const start = moment().subtract('10', 'hours').toISOString();
-    const end = moment().add(selectedPeriod, 'days').toISOString();
+    const start = moment().subtract(selectedPeriod, 'month').toISOString();
+    const end = moment().toISOString();
 
     const params = new URLSearchParams({
         start,
