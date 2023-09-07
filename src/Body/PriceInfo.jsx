@@ -1,7 +1,9 @@
 import Badge from 'react-bootstrap/Badge';
 import { NOW_TIMESTAMP, LOW_ELE_PRICE } from '../constants';
+import { useSelector } from 'react-redux';
 
-function PriceInfo({ electricityPrice }) {
+function PriceInfo() {
+    const electricityPrice = useSelector((state) => state.electricityPrice);
 
     const currentPrice = electricityPrice?.ee.find(item => item.timestamp === NOW_TIMESTAMP);
     

@@ -1,13 +1,15 @@
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import { PERIODS } from '../constants';
+import { useSelector, useDispatch } from 'react-redux';
+import { setSelectedPeriod } from '../services/stateService';
 
 function Periods({
     setShowSideBar,
-    selectedPeriod,
-    setSelectedPeriod,
-    activeEnergy,
 }) {
+    const dispatch = useDispatch();
+    const selectedPeriod = useSelector((state) => state.selectedPeriod);
+    const activeEnergy = useSelector((state) => state.activeEnergy);
 
     return (
         <Container className="text-center my-2">
@@ -17,7 +19,7 @@ function Periods({
                     key={value}
                     variant="primary"
                     active={selectedPeriod === value}
-                    onClick={() => setSelectedPeriod(value)}
+                    onClick={() => dispatch(setSelectedPeriod(value))}
                 >
                     {value} {label[activeEnergy]}
                 </Button>
@@ -25,7 +27,7 @@ function Periods({
             <Button
                 className="mx-2"
                 variant="primary"
-                onClick={() => setShowSideBar(true)}
+                onClick={() => dispatch(setShowSideBar(true))}
             >Custom</Button>
         </Container>
     );

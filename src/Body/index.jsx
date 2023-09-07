@@ -5,72 +5,51 @@ import DataTable from './DataTable';
 import ErrorModal from './ErrorModal';
 import { getElectricityPrice, getGasPrice, getCurrentGasPrice } from '../services/apiService';
 import { CHART } from '../constants';
+import { setElectricityPrice, setGasPrice, setGasCurrentPrice } from '../services/stateService';
+import { useDispatch, useSelector } from 'react-redux';
 import './body.scss';
 
-function Body({
-    dataType,
-    selectedPeriod,
-    activeEnergy,
-    setActiveEnergy,
-    electricityPrice,
-    setElectricityPrice,
-    gasPrice,
-    setGasPrice,
-    gasCurrentPrice,
-    setGasCurrentPrice,
-}) {
+function Body() {
+    const dispatch = useDispatch();
+    const dataType = useSelector((state) => state.dataType);
+    const selectedPeriod = useSelector((state) => state.selectedPeriod);
     const [errorMessage, setErrorMessage] = useState(null);
 
     useEffect(() => {
         getElectricityPrice({ selectedPeriod }).then(data => {
-            console.log('ele', data);
+            // console.log('ele', data);
             if (!data.success) {
                 throw data.messages[0];
             }
-            setElectricityPrice(data.data);
+            dispatch(setElectricityPrice(data.data));
         })
             .catch(setErrorMessage);
 
         getGasPrice({ selectedPeriod }).then(data => {
-            console.log('gas', data);
+            // console.log('gas', data);
             if (!data.success) {
                 throw data.messages[0];
             }
-            setGasPrice(data.data);
+            dispatch(setGasPrice(data.data));
         })
             .catch(setErrorMessage);
 
-    }, [selectedPeriod, setGasPrice, setElectricityPrice]);
+    }, [dispatch, selectedPeriod]);
 
     useEffect(() => {
         getCurrentGasPrice().then(data => {
-            console.log('gas', data);
+            // console.log('gas', data);
             if (!data.success) {
                 throw data.messages[0];
             }
-            setGasCurrentPrice(data.data[0].price);
+            dispatch(setGasCurrentPrice(data.data[0].price));
         }).catch(setErrorMessage);
-    }, [setGasCurrentPrice]);
+    }, [dispatch]);
 
     return (
         <>
-            <Header
-                activeEnergy={activeEnergy}
-                setActiveEnergy={setActiveEnergy}
-                electricityPrice={electricityPrice}
-                gasCurrentPrice={gasCurrentPrice}
-            />
-            {dataType === CHART ?
-                <Chart
-                    activeEnergy={activeEnergy}
-                    electricityPrice={electricityPrice}
-                    gasPrice={gasPrice}
-                />
-                : <DataTable
-                    electricityPrice={electricityPrice}
-                    gasPrice={gasPrice}
-                    activeEnergy={activeEnergy}
-                />}
+            <Header />
+            {dataType === CHART ? <Chart /> : <DataTable />}
             <ErrorModal errorMessage={errorMessage} handleClose={() => setErrorMessage(null)} />
         </>
     );

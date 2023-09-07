@@ -12,8 +12,12 @@ import {
 } from 'recharts';
 import moment from 'moment';
 import { NOW_TIMESTAMP, ELE, GAS } from '../constants';
+import { useSelector } from 'react-redux';
 
-function Chart({ electricityPrice, activeEnergy, gasPrice }) {
+function Chart() {
+    const electricityPrice = useSelector((state) => state.electricityPrice);
+    const activeEnergy = useSelector((state) => state.activeEnergy);
+    const gasPrice = useSelector((state) => state.gasPrice);
     const [chartData, setChartData] = useState([]);
 
     useEffect(() => {

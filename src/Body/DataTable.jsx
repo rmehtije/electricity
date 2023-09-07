@@ -2,8 +2,12 @@ import { useEffect, useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import moment from 'moment';
 import { NOW_TIMESTAMP, ELE, GAS } from '../constants';
+import { useSelector } from 'react-redux';
 
-function DataTable({ electricityPrice, activeEnergy, gasPrice }) {
+function DataTable() {
+  const electricityPrice = useSelector((state) => state.electricityPrice);
+  const activeEnergy = useSelector((state) => state.activeEnergy);
+  const gasPrice = useSelector((state) => state.gasPrice);
   const [tableData, setTableData] = useState([]);
 
   useEffect(() => {
