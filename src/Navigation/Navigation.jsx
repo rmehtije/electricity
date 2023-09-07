@@ -2,7 +2,6 @@ import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 
 function Navigation() {
-    console.log('Navigation');
     return (
         <Navbar className="bg-body-tertiary">
             <Container>

@@ -1,16 +1,13 @@
-import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import ErrorModal from '../Body/ErrorModal';
 import { getElectricityPrice, getGasPrice } from '../services/apiService';
-import { setElectricityPrice, setGasPrice } from '../services/stateService';
+import { setElectricityPrice, setGasPrice, setErrorMessage } from '../services/stateService';
 import { useDispatch } from 'react-redux';
 
 function DateForm({
   hideSideBar,
 }) {
   const dispatch = useDispatch();
-  const [errorMessage, setErrorMessage] = useState(null);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -24,19 +21,19 @@ function DateForm({
         getGasPrice({ to, from }),
       ]);
 
-      if(![dataEle, dataGas].find(data => data.success)) {
+      if (![dataEle, dataGas].find(data => data.success)) {
         throw (dataEle || dataGas).messages[0];
       }
 
       dispatch(setElectricityPrice(dataEle.data));
       dispatch(setGasPrice(dataGas.data));
     } catch (error) {
-      setErrorMessage(error);
+      dispatch(setErrorMessage(error));
+    } finally {
+      hideSideBar();
     }
 
     console.log(from, to);
-
-    hideSideBar();
   };
 
   return (
@@ -44,19 +41,18 @@ function DateForm({
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3">
           <Form.Label>From</Form.Label>
-          <Form.Control type="date" name="from" />
+          <Form.Control type="date" name="from" required />
         </Form.Group>
 
         <Form.Group className="mb-3">
           <Form.Label>To</Form.Label>
-          <Form.Control type="date" name="to" />
+          <Form.Control type="date" name="to" required />
         </Form.Group>
 
         <Button variant="primary" type="submit">
           Search
         </Button>
       </Form>
-      <ErrorModal errorMessage={errorMessage} handleClose={() => setErrorMessage(null)} />
     </>
   );
 }
