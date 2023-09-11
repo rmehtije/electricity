@@ -4,6 +4,12 @@ import { getElectricityPrice, getGasPrice } from '../services/apiService';
 import { setElectricityPrice, setGasPrice, setErrorMessage } from '../services/stateService';
 import { useDispatch } from 'react-redux';
 
+// Komponenty prinemajut odin argument. Eto property object. V njom hranjatsa vse znachenija kotorye my peredali
+// v komponent ex: <Component props1={1} props={2} /> Properti peredajotsa v komponent kak atribute v html.
+// Vnutri komponenta properti menjat' ne vozmozhno.
+// Properti mogut byt' ljubym tipom dannyh kotorye sushestvujut v nodeJs.
+// Jest' odno zabronirovannoe imja propery 'children'. V nego zapisyvajutsa vse elementy peredannye vnutri 
+// komponenta. 
 function DateForm({
   hideSideBar,
 }) {
