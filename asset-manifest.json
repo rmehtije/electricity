@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/electricity/static/css/main.67ec4731.css",
-    "main.js": "/electricity/static/js/main.cb8ff1c3.js",
+    "main.js": "/electricity/static/js/main.ede7f844.js",
     "index.html": "/electricity/index.html",
     "main.67ec4731.css.map": "/electricity/static/css/main.67ec4731.css.map",
-    "main.cb8ff1c3.js.map": "/electricity/static/js/main.cb8ff1c3.js.map"
+    "main.ede7f844.js.map": "/electricity/static/js/main.ede7f844.js.map"
   },
   "entrypoints": [
     "static/css/main.67ec4731.css",
-    "static/js/main.cb8ff1c3.js"
+    "static/js/main.ede7f844.js"
   ]
 }
